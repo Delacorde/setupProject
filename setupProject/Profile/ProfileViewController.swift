@@ -1,5 +1,5 @@
 import UIKit
-class ProfileViewController: UIViewController{
+final class ProfileViewController: UIViewController{
     override func viewDidLoad(){
         //MARK: IMAGE
         let profileImage = UIImage(named: "profilePhoto")
@@ -40,12 +40,16 @@ class ProfileViewController: UIViewController{
         bio.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor).isActive = true
         bio.topAnchor.constraint(equalTo: nickName.bottomAnchor,constant: 8).isActive = true
         
+        let buttonName = "quit"
+        guard let imageButton = UIImage(named: buttonName) else{
+            return print("image button not found")
+            }
         let button = UIButton.systemButton(
-            with: UIImage(named:"quit")!,
+            with: imageButton,
             target: self,
             action: #selector(Self.didTapButton)
         )
-        
+        //BUTTON
         button.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(button)
         button.tintColor = .ypRed

@@ -5,26 +5,26 @@ final class SingleImageViewController: UIViewController {
     @IBOutlet weak var backwardOutlet: UIButton!
     @IBOutlet weak var didTapButtonOutlet: UIButton!
     var image: UIImage? {
-            didSet {
-                guard isViewLoaded, let image else { return }
-                
-                imageView.image = image
-                imageView.frame.size = image.size
-                rescaleAndCenterImageInScrollView(image: image)
-            }
+        didSet {
+            guard isViewLoaded, let image else { return }
+            
+            imageView.image = image
+            imageView.frame.size = image.size
+            rescaleAndCenterImageInScrollView(image: image)
         }
+    }
     @IBOutlet weak var imageView: UIImageView!
     // MARK: ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
-
+        
         guard let image else {return}
         imageView.image = image
         imageView.frame.size = image.size
         rescaleAndCenterImageInScrollView(image: image)
-
+        
     }
     
     //MARK: Properties
@@ -64,7 +64,7 @@ final class SingleImageViewController: UIViewController {
     }
     
 }
-//MARK: Extenctions
+//MARK: Extensions
 extension SingleImageViewController: UIScrollViewDelegate{
     func viewForZooming(in scrollView: UIScrollView)->UIView? {
         imageView
