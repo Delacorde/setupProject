@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6ABBD6BA2FF6908B00E59E50 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ABBD6B92FF6908B00E59E50 /* WebKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		6AFE31D22FCC88BC001DF7B2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,12 +28,29 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6ABBD6B92FF6908B00E59E50 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		6AFE31BB2FCC88B9001DF7B2 /* setupProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = setupProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AFE31D12FCC88BC001DF7B2 /* setupProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = setupProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AFE31DB2FCC88BC001DF7B2 /* setupProjectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = setupProjectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6A0C43D32FE722A100C85DD3 /* Exceptions for "Fonts" folder in "setupProject" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"SF-Pro-Display-Regular.otf",
+				"SF-Pro.ttf",
+			);
+			target = 6AFE31BA2FCC88B9001DF7B2 /* setupProject */;
+		};
+		6A0C43D42FE722A100C85DD3 /* Exceptions for "Fonts" folder in "setupProjectUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"SF-Pro-Display-Regular.otf",
+				"SF-Pro.ttf",
+			);
+			target = 6AFE31DA2FCC88BC001DF7B2 /* setupProjectUITests */;
+		};
 		6AFE31E32FCC88BC001DF7B2 /* Exceptions for "setupProject" folder in "setupProject" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -40,6 +61,15 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		6A0C43D02FE722A100C85DD3 /* Fonts */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6A0C43D32FE722A100C85DD3 /* Exceptions for "Fonts" folder in "setupProject" target */,
+				6A0C43D42FE722A100C85DD3 /* Exceptions for "Fonts" folder in "setupProjectUITests" target */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		6AFE31BD2FCC88B9001DF7B2 /* setupProject */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -65,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6ABBD6BA2FF6908B00E59E50 /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,12 +116,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6ABBD6B82FF6908A00E59E50 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6ABBD6B92FF6908B00E59E50 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6AFE31B22FCC88B9001DF7B2 = {
 			isa = PBXGroup;
 			children = (
+				6A0C43D02FE722A100C85DD3 /* Fonts */,
 				6AFE31BD2FCC88B9001DF7B2 /* setupProject */,
 				6AFE31D42FCC88BC001DF7B2 /* setupProjectTests */,
 				6AFE31DE2FCC88BC001DF7B2 /* setupProjectUITests */,
+				6ABBD6B82FF6908A00E59E50 /* Frameworks */,
 				6AFE31BC2FCC88B9001DF7B2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -167,6 +208,7 @@
 				6AFE31DD2FCC88BC001DF7B2 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				6A0C43D02FE722A100C85DD3 /* Fonts */,
 				6AFE31DE2FCC88BC001DF7B2 /* setupProjectUITests */,
 			);
 			name = setupProjectUITests;
