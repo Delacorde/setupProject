@@ -24,7 +24,7 @@ final class WebViewViewController: UIViewController {
     //MARK: funcs
     private func loadAuthView(){
         guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
-            return
+            return print("Failed to create URLComponents")
         }
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: Constants.accessKey),
@@ -32,7 +32,9 @@ final class WebViewViewController: UIViewController {
             URLQueryItem(name: "response_type", value: "code"),
             URLQueryItem(name: "scope", value: Constants.accessScope)
         ]
-        guard let url = urlComponents.url else {return}
+        guard let url = urlComponents.url else {
+            return print("Failed to create URL)")
+        }
         let request = URLRequest(url: url)
         webView.load(request)
     }
@@ -85,18 +87,32 @@ extension WebViewViewController: WKNavigationDelegate {
             decisionHandler(.allow)
         }
     }
-
+    
     private func code(from navigationAction: WKNavigationAction) -> String? {
-        if
-            let url = navigationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
-        } else {
+        guard let url = navigationAction.request.url else {
+            print(" Failed to get URL")
             return nil
         }
+        guard let urlComponents = URLComponents(string: url.absoluteString) else {
+            print("Failed to create URLComponents")
+            return nil
+        }
+        guard urlComponents.path == "/oauth/authorize/native" else {
+            print("URL path is not '/oauth/authorize/native'")
+            return nil
+        }
+        guard let items = urlComponents.queryItems else {
+            print("No query items in URL")
+            return nil
+        }
+        guard let codeItem = items.first(where: { $0.name == "code" }) else {
+            print("No 'code' parameter found in query items")
+            return nil
+        }
+        guard let code = codeItem.value else {
+            print("code parameter has no value")
+            return nil
+        }
+        return code
     }
 }

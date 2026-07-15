@@ -37,21 +37,15 @@ final class AuthViewController: UIViewController {
                 super.prepare(for: segue, sender: sender)
             }
         }
-}
-
-extension AuthViewController: WebViewViewControllerDelegate {
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        vc.dismiss(animated: true)
-    }
-    
-    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        vc.dismiss(animated: true)
+func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         oauth2Service.fetchOAuthToken(code: code) { result in
             switch result{
             case . success(let token):
                 let storageForToken = OAuth2TokenStorage()
                 storageForToken.token = token
-                vc.dismiss(animated: true)
+                DispatchQueue.main.async {
+                    self.delegate?.didAuthenticate(self)
+                }
             case .failure(let error):
                 print(error)
             }
@@ -65,4 +59,10 @@ extension AuthViewController {
         }
     }
 }
+extension AuthViewController: WebViewViewControllerDelegate {
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+        vc.dismiss(animated: true)
+    }
+}
+
 
