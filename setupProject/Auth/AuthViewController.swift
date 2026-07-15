@@ -7,6 +7,7 @@ protocol AuthViewControllerDelegate: AnyObject {
 
 
 final class AuthViewController: UIViewController {
+    @IBOutlet weak var enterButton: UIButton!
     private let identifier = "ShowWebView"
     
     weak var delegate: AuthViewControllerDelegate?

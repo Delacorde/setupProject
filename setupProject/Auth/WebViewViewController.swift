@@ -9,8 +9,8 @@ protocol WebViewViewControllerDelegate: AnyObject {
 final class WebViewViewController: UIViewController {
     // MARK: Outlets
     @IBOutlet private weak var webView: WKWebView!
-    @IBOutlet private weak var progresView: UIProgressView!
     
+    @IBOutlet weak var progressView: UIProgressView!
     // MARK: Delegate
     weak var delegate: WebViewViewControllerDelegate?
     
@@ -63,10 +63,10 @@ final class WebViewViewController: UIViewController {
         }
     }
     private func updateProgress() {
-        progresView.progress = Float(webView.estimatedProgress)
-        progresView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+        progressView.progress = Float(webView.estimatedProgress)
+        progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
     }
-    //MARK: Enums
+//MARK: Enums
     enum WebViewConstants {
         static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     }
