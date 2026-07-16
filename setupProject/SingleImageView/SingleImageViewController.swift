@@ -2,8 +2,8 @@ import UIKit
 final class SingleImageViewController: UIViewController {
     // MARK: Outlets
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var backwardOutlet: UIButton!
-    @IBOutlet weak var didTapButtonOutlet: UIButton!
+    @IBOutlet weak var didTapBackButton: UIButton!
+    @IBOutlet weak var didTapShareButton: UIButton!
     var image: UIImage? {
         didSet {
             guard isViewLoaded, let image else { return }
@@ -51,7 +51,8 @@ final class SingleImageViewController: UIViewController {
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
     // MARK: Actions
-    @IBAction func backwardAction(_ sender: Any) {
+    
+    @IBAction func didTapBackButtonAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
