@@ -1,6 +1,5 @@
 import UIKit
-
-
+import ProgressHUD
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
 }
@@ -25,31 +24,41 @@ final class AuthViewController: UIViewController {
         navigationItem.backBarButtonItem?.tintColor = UIColor(named: "ypBlack")
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier == identifier {
-                guard
-                    let webViewViewController = segue.destination as? WebViewViewController
-                else {
-                    assertionFailure("Failed to prepare for \(identifier)")
-                    return
-                }
-                webViewViewController.delegate = self
-            } else {
-                super.prepare(for: segue, sender: sender)
+        if segue.identifier == identifier {
+            guard
+                let webViewViewController = segue.destination as? WebViewViewController
+            else {
+                assertionFailure("Failed to prepare for \(identifier)")
+                return
             }
+            webViewViewController.delegate = self
+        } else {
+            super.prepare(for: segue, sender: sender)
         }
-func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        oauth2Service.fetchOAuthToken(code: code) { result in
+    }
+}
+extension AuthViewController: WebViewViewControllerDelegate {
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        ProgressHUD.animate()
+        
+        oauth2Service.fetchOAuthToken(code: code) { [weak self] result in
+            
+            ProgressHUD.dismiss()
+            
+            guard let self = self else { return }
             switch result{
-            case . success(let token):
-                let storageForToken = OAuth2TokenStorage()
-                storageForToken.token = token
-                DispatchQueue.main.async {
-                    self.delegate?.didAuthenticate(self)
-                }
+            case .success(let token):
+                OAuth2TokenStorage().token = token
+                vc.dismiss(animated: true)
+                self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                print(error)
+                let alert = UIAlertController(title: "Ошибка", message: "Произошла ошибка при авторизации, Попробуйте позже", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
             }
         }
+    }
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+        vc.dismiss(animated: true)
     }
 }
 extension AuthViewController {
@@ -57,11 +66,6 @@ extension AuthViewController {
         oauth2Service.fetchOAuthToken(code: code) { result in
             completion(result)
         }
-    }
-}
-extension AuthViewController: WebViewViewControllerDelegate {
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        vc.dismiss(animated: true)
     }
 }
 

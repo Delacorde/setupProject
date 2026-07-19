@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6ABBD6BA2FF6908B00E59E50 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ABBD6B92FF6908B00E59E50 /* WebKit.framework */; };
+		6AC0AEE03009015D00C4D738 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 6AC0AEDF3009015D00C4D738 /* ProgressHUD */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +97,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6ABBD6BA2FF6908B00E59E50 /* WebKit.framework in Frameworks */,
+				6AC0AEE03009015D00C4D738 /* ProgressHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +168,7 @@
 			);
 			name = setupProject;
 			packageProductDependencies = (
+				6AC0AEDF3009015D00C4D738 /* ProgressHUD */,
 			);
 			productName = setupProject;
 			productReference = 6AFE31BB2FCC88B9001DF7B2 /* setupProject.app */;
@@ -250,6 +253,9 @@
 			);
 			mainGroup = 6AFE31B22FCC88B9001DF7B2;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6AC0AEDE3009011100C4D738 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6AFE31BC2FCC88B9001DF7B2 /* Products */;
 			projectDirPath = "";
@@ -639,6 +645,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6AC0AEDE3009011100C4D738 /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/relatedcode/ProgressHUD";
+			requirement = {
+				kind = exactVersion;
+				version = 14.1.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6AC0AEDF3009015D00C4D738 /* ProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6AC0AEDE3009011100C4D738 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			productName = ProgressHUD;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6AFE31B32FCC88B9001DF7B2 /* Project object */;
 }
