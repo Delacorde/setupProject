@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 enum AuthServiceError: Error{
     case invalidRequest
@@ -38,34 +38,21 @@ class OAuth2Service {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
-        let task = urlSession.dataTask(with: request) { [weak self] data, response, error in
-            DispatchQueue.main.async {
-                self?.task = nil
-                self?.lastCode = nil
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    return
-                }
-                let statusCode = httpResponse.statusCode
-                guard 200..<300 ~= statusCode else {
-                    completion(.failure(NetworkError.httpStatusCode(statusCode)))
-                    return
-                }
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-                guard let data = data else {
-                    completion(.failure(AuthServiceError.invalidRequest))
-                    return
-                }
-                do {
-                    let tokenResponse = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    completion(.success(tokenResponse.access_token))
-                } catch {
-                    completion(.failure(error))
-                }
+        let task = urlSession.objectTask(
+            for: request
+        ) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            self?.task = nil
+            self?.lastCode = nil
+
+            switch result {
+            case .success(let tokenResponse):
+                completion(.success(tokenResponse.access_token))
+
+            case .failure(let error):
+                print("[OAuth2Service.fetchOAuthToken]: \(error)")
+                completion(.failure(error))
             }
-            }
+        }
         self.task = task
         task.resume()
     }

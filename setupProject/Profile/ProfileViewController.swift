@@ -1,25 +1,30 @@
 import UIKit
+import Kingfisher
 final class ProfileViewController: UIViewController{
     //MARK: Properties
-    let profileService = ProfileServce()
+    private let profileService = ProfileService.shared
     
+    private var avatarImageView: UIImageView?
         private let nameLabel = UILabel()
         private let nickName = UILabel()
         private let bio = UILabel()
         private let quitButton = UIButton()
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     //MARK: ViewDidLoad
     override func viewDidLoad(){
         super.viewDidLoad()
-        profileService.fetchProfile(
-            Constants.accessKey) { result in
-                switch result {
-                case .success(let profile):
-                    self.updateProfile(profile: profile)
-                case .failure(let error):
-                    print("Error: \(error)")
-                }
+        if let profile = profileService.profile {
+            updateProfile(profile: profile)
+        }
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(forName: ProfileImageService.didChangeNotification, object: nil, queue: .main) { [weak self ] _ in
+                guard let self = self else{ return}
+                self.updateAvatar()
             }
+        updateAvatar()
+    
+        
         //MARK: IMAGE
         let profileImage = UIImage(named: "profilePhoto")
         let image = UIImageView(image: profileImage)
@@ -79,6 +84,34 @@ final class ProfileViewController: UIViewController{
         nameLabel.text = profile.name
                 nickName.text = profile.loginName
                 bio.text = profile.bio ?? "no bio"
+    }
+    private func updateAvatar(){
+        guard let profileImageURL = ProfileImageService.shared.avatarURL,
+        let url = URL(string: profileImageURL)
+        else {return}
+    
+        let placeholderImage = UIImage(systemName: "person.circle.fill")?
+                  .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+                  .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
+              let proccessor = RoundCornerImageProcessor(cornerRadius: 35)
+              avatarImageView?.kf.indicatorType = .activity
+              avatarImageView?.kf.setImage(
+                  with: url,
+                  placeholder: placeholderImage,
+                  options: [
+                      .processor(proccessor),
+                      .scaleFactor(UIScreen.main.scale),
+                      .cacheOriginalImage,
+                  ]) { result in
+                      switch result {
+                      case .success(let value):
+                          print(value.image)
+                          print(value.cacheType)
+                          print(value.source)
+                      case .failure(let error):
+                          print(error)
+                      }
+                  }
     }
     @objc
     private func didTapButton() {}

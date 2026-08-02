@@ -46,16 +46,23 @@ extension AuthViewController: WebViewViewControllerDelegate {
             UIBlockingProgressHUD.dismiss()
             guard let self = self else { return }
             switch result{
-            case .success(let token):
-                OAuth2TokenStorage().token = token
-                vc.dismiss(animated: true)
+            case .success:
                 self.delegate?.didAuthenticate(self)
-            case .failure(let error):
-                let alert = UIAlertController(title: "Ошибка", message: "Произошла ошибка при авторизации, Попробуйте позже", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
+            case .failure:
+                        let alert = UIAlertController(
+                            title: "Что-то пошло не так",
+                            message: "Не удалось войти в систему",
+                            preferredStyle: .alert
+                        )
+
+                        alert.addAction(
+                            UIAlertAction(title: "Ок", style: .default)
+                        )
+
+                        self.present(alert, animated: true)
+                    }
+                }
             }
-        }
-    }
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         vc.dismiss(animated: true)
     }

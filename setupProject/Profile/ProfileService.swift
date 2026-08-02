@@ -12,10 +12,14 @@ struct Profile: Codable{
     let loginName: String
     let bio: String?
 }
-final class ProfileServce{
+final class ProfileService{
+    static let shared = ProfileService()
+    private init() {}
+    
     //MARK: Properties
     private var task:URLSessionTask?
     private let urlSession = URLSession.shared
+    private(set) var profile: Profile?
     
     //MARK: Funcs
     func fetchProfile(_ token: String, completion: @escaping(Result<Profile,Error>) -> Void){
@@ -25,26 +29,26 @@ final class ProfileServce{
             completion(.failure(URLError(.badURL)))
             return
         }
-        let task = urlSession.data(for: request) { [weak self] result in
-            switch result{
-            case .success(let data):
-                do {
-                    let profileResult = try
-                    JSONDecoder().decode(ProfileResult.self, from: data)
-                    
-                    let profile = Profile(
-                        username: profileResult.username,
-                        name: profileResult.first_name,
-                        loginName: "@\(profileResult.username)",
-                        bio: profileResult.bio)
-                    
-                    completion(.success(profile))
-                } catch {
-                    completion(.failure(error))
-                }
+        let task = urlSession.objectTask(
+            for: request
+        ) { [weak self] (result: Result<ProfileResult, Error>) in
+            switch result {
+            case .success(let profileResult):
+                let profile = Profile(
+                    username: profileResult.username,
+                    name: profileResult.first_name,
+                    loginName: "@\(profileResult.username)",
+                    bio: profileResult.bio
+                )
+
+                self?.profile = profile
+                completion(.success(profile))
+
             case .failure(let error):
+                print("[ProfileService.fetchProfile]: \(error)")
                 completion(.failure(error))
             }
+
             self?.task = nil
         }
         self.task = task
@@ -60,4 +64,7 @@ final class ProfileServce{
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Autorization")
         return request
     }
+    private func updateDetalies() {
+    }
 }
+
