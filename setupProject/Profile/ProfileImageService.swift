@@ -20,7 +20,6 @@ final class ProfileImageService {
     private init() {}
     
     private(set) var avatarURL: String?
-    
     private var task: URLSessionTask?
     
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
@@ -38,32 +37,33 @@ final class ProfileImageService {
             return
         }
         
-        let task = URLSession.shared.objectTask(
-            for: request
-        ) { [weak self] (result: Result<UserResult, Error>) in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let userResult):
-                guard let self else { return }
-                
                 let profileImageURL = userResult.profileImage.small
                 self.avatarURL = profileImageURL
                 
                 completion(.success(profileImageURL))
                 
-                NotificationCenter.default
-                    .post(
-                        name: ProfileImageService.didChangeNotification,
-                        object: self,
-                        userInfo: ["URL": profileImageURL]
-                    )
+                NotificationCenter.default.post(
+                    name: ProfileImageService.didChangeNotification,
+                    object: self,
+                    userInfo: ["URL": profileImageURL]
+                )
                 
             case .failure(let error):
-                print("[ProfileImageService.fetchProfileImageURL]: \(error)")
-
+                print("[ProfileImageService.fetchProfileImageURL]: Error - \(error)")
                 completion(.failure(error))
             }
+            self.task = nil
         }
+        
+        self.task = task
+        task.resume()
     }
+    
     private func makeProfileImageRequest(username: String, token: String) -> URLRequest? {
         guard let url = URL(string: "https://api.unsplash.com/users/\(username)") else {
             return nil

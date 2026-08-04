@@ -8,10 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6A0E0CDF301F29A500475958 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 6A0E0CDE301F29A500475958 /* SwiftKeychainWrapper */; };
-		6A0E0CE1301F29AE00475958 /* SwiftKeychainWrapper in Resources */ = {isa = PBXBuildFile; fileRef = 6A0E0CE0301F29AE00475958 /* SwiftKeychainWrapper */; };
 		6A2B3DAA3016509500B27E64 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6A2B3DA93016509500B27E64 /* Kingfisher */; };
-		6A65B325301A5A2400EA97D9 /* kingfisher in Resources */ = {isa = PBXBuildFile; fileRef = 6A65B324301A5A2400EA97D9 /* kingfisher */; };
-		6A65B327301A5A2700EA97D9 /* ProgressHUD in Resources */ = {isa = PBXBuildFile; fileRef = 6A65B326301A5A2700EA97D9 /* ProgressHUD */; };
 		6ABBD6BA2FF6908B00E59E50 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ABBD6B92FF6908B00E59E50 /* WebKit.framework */; };
 		6AC0AEE03009015D00C4D738 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 6AC0AEDF3009015D00C4D738 /* ProgressHUD */; };
 /* End PBXBuildFile section */
@@ -63,6 +60,7 @@
 		6AFE31E32FCC88BC001DF7B2 /* Exceptions for "setupProject" folder in "setupProject" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"/Localized: LaunchScreen.storyboard",
 				Info.plist,
 			);
 			target = 6AFE31BA2FCC88B9001DF7B2 /* setupProject */;
@@ -290,9 +288,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6A65B327301A5A2700EA97D9 /* ProgressHUD in Resources */,
-				6A0E0CE1301F29AE00475958 /* SwiftKeychainWrapper in Resources */,
-				6A65B325301A5A2400EA97D9 /* kingfisher in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

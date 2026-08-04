@@ -1,63 +1,70 @@
 import Foundation
 
-enum AuthServiceError: Error{
+enum AuthServiceError: Error {
     case invalidRequest
 }
-class OAuth2Service {
-    struct OAuthTokenResponseBody: Decodable{
-        let access_token: String
-    }
-    // MARK: Properties
-    private var lastCode: String?
-    private var task: URLSessionTask?
-    private let urlSession = URLSession.shared
-    weak var delegate: OAuth2ServiceDelegate?
+
+final class OAuth2Service {
     static let shared = OAuth2Service()
-    private init() {}
-    
-    
+
+    private let dataStorage = OAuth2TokenStorage.shared
+    private let urlSession = URLSession.shared
+
+    private var task: URLSessionTask?
+    private var lastCode: String?
+
+    private(set) var authToken: String? {
+        get {
+            return dataStorage.token
+        }
+        set {
+            dataStorage.token = newValue
+        }
+    }
+
+    private init() { }
+
     func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-        if task != nil {
-            if lastCode != code {
-                task?.cancel()
-            } else {
-                completion(.failure(AuthServiceError.invalidRequest))
-                
-            }
-        } else {
-            if lastCode == code {
-                completion(.failure(AuthServiceError.invalidRequest))
-                return
-            }
-        }
-        lastCode = code
-        guard
-            let request = makeOAuthTokenRequest(code: code)
-        else {
+        
+        guard lastCode != code else {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
-        let task = urlSession.objectTask(
-            for: request
-        ) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
-            self?.task = nil
-            self?.lastCode = nil
 
-            switch result {
-            case .success(let tokenResponse):
-                completion(.success(tokenResponse.access_token))
+        task?.cancel()
+        lastCode = code
+        
+        guard let request = makeOAuthTokenRequest(code: code) else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
 
-            case .failure(let error):
-                print("[OAuth2Service.fetchOAuthToken]: \(error)")
-                completion(.failure(error))
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+
+                switch result {
+                case .success(let body):
+                    let authToken = body.accessToken
+                    self.authToken = authToken
+                    completion(.success(authToken))
+                case .failure(let error):
+                    print("[OAuth2Service.fetchOAuthToken]: \(error)")
+                    completion(.failure(error))
+                }
+                
+                self.task = nil
+                self.lastCode = nil
             }
         }
         self.task = task
         task.resume()
     }
-    func makeOAuthTokenRequest(code: String) -> URLRequest? {
+
+    private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token") else {
+            assertionFailure("Failed to create URL")
             return nil
         }
         
@@ -66,16 +73,21 @@ class OAuth2Service {
             URLQueryItem(name: "client_secret", value: Constants.secretKey),
             URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
             URLQueryItem(name: "code", value: code),
-            URLQueryItem(name: "grant_type", value: "authorization_code"),
+            URLQueryItem(name: "grant_type", value: "authorization_code")
         ]
         
-        guard let authTokenUrl = urlComponents.url else {
-            return nil
-        }
+        guard let authTokenUrl = urlComponents.url else { return nil }
         
         var request = URLRequest(url: authTokenUrl)
         request.httpMethod = "POST"
         return request
     }
-}
 
+    private struct OAuthTokenResponseBody: Codable {
+        let accessToken: String
+
+        enum CodingKeys: String, CodingKey {
+            case accessToken = "access_token"
+        }
+    }
+}
