@@ -26,6 +26,7 @@ final class ProfileService{
         task?.cancel()
         
         guard let request = makeProfileRequest(token: token) else {
+            print("[ProfileService.fetchProfile]: URLError - неверный URL для токена: \(token)")
             completion(.failure(URLError(.badURL)))
             return
         }
@@ -35,21 +36,21 @@ final class ProfileService{
             switch result {
                 
             case .success(let profileResult):
-                            let fullName = [profileResult.first_name, profileResult.last_name]
-                                .compactMap { $0 }
-                                .joined(separator: " ")
-                            
-                            let profile = Profile(
-                                username: profileResult.username,
-                                name: fullName,
-                                loginName: "@\(profileResult.username)",
-                                bio: profileResult.bio
+                let fullName = [profileResult.first_name, profileResult.last_name]
+                    .compactMap { $0 }
+                    .joined(separator: " ")
+                
+                let profile = Profile(
+                    username: profileResult.username,
+                    name: fullName,
+                    loginName: "@\(profileResult.username)",
+                    bio: profileResult.bio
                 )
                 self?.profile = profile
                 completion(.success(profile))
                 
             case .failure(let error):
-                print("[ProfileService.fetchProfile]: \(error)")
+                print("[ProfileService.fetchProfile]: RequestError - \(error) for token: \(token)")
                 completion(.failure(error))
             }
             

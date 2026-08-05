@@ -13,7 +13,7 @@ extension URLSession{
         for request: URLRequest,
         completion: @escaping (Result<Data, Error>) -> Void
     ) -> URLSessionTask {
-        let fulfillCompletionOnTheMainThread: (Result<Data, Error>) -> Void = { result in  
+        let fulfillCompletionOnTheMainThread: (Result<Data, Error>) -> Void = { result in
             DispatchQueue.main.async {
                 completion(result)
             }
@@ -45,7 +45,7 @@ extension URLSession {
         completion: @escaping (Result<T, Error>) -> Void
     ) -> URLSessionTask {
         let decoder = JSONDecoder()
-
+        
         let task = data(for: request) { result in
             switch result {
             case .success(let data):
@@ -53,14 +53,16 @@ extension URLSession {
                     let object = try decoder.decode(T.self, from: data)
                     completion(.success(object))
                 } catch {
+                    let responseString = String(data: data, encoding: .utf8) ?? "Unreadable Data"
+                    print("[URLSession.objectTask]: DecodingError\(error); data: \(responseString)")
                     completion(.failure(NetworkError.decodingError(error)))
                 }
-
+                
             case .failure(let error):
                 completion(.failure(error))
             }
         }
-
+        
         return task
     }
 }
