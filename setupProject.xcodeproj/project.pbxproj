@@ -33,7 +33,6 @@
 /* Begin PBXFileReference section */
 		6A0E0CE0301F29AE00475958 /* SwiftKeychainWrapper */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SwiftKeychainWrapper; path = /Users/it/Desktop/setupProject/SwiftKeychainWrapper; sourceTree = "<absolute>"; };
 		6A65B324301A5A2400EA97D9 /* kingfisher */ = {isa = PBXFileReference; lastKnownFileType = folder; name = kingfisher; path = /Users/it/Desktop/setupProject/kingfisher; sourceTree = "<absolute>"; };
-		6A65B326301A5A2700EA97D9 /* ProgressHUD */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ProgressHUD; path = /Users/it/Desktop/setupProject/ProgressHUD; sourceTree = "<absolute>"; };
 		6ABBD6B92FF6908B00E59E50 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		6AFE31BB2FCC88B9001DF7B2 /* setupProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = setupProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AFE31D12FCC88BC001DF7B2 /* setupProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = setupProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,7 +130,6 @@
 			children = (
 				6ABBD6B92FF6908B00E59E50 /* WebKit.framework */,
 				6A65B324301A5A2400EA97D9 /* kingfisher */,
-				6A65B326301A5A2700EA97D9 /* ProgressHUD */,
 				6A0E0CE0301F29AE00475958 /* SwiftKeychainWrapper */,
 			);
 			name = Frameworks;
