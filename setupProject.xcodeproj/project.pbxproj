@@ -41,6 +41,22 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6A0C43D32FE722A100C85DD3 /* Exceptions for "Fonts" folder in "setupProject" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"SF-Pro-Display-Regular.otf",
+				"SF-Pro.ttf",
+			);
+			target = 6AFE31BA2FCC88B9001DF7B2 /* setupProject */;
+		};
+		6A0C43D42FE722A100C85DD3 /* Exceptions for "Fonts" folder in "setupProjectUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"SF-Pro-Display-Regular.otf",
+				"SF-Pro.ttf",
+			);
+			target = 6AFE31DA2FCC88BC001DF7B2 /* setupProjectUITests */;
+		};
 		6AFE31E32FCC88BC001DF7B2 /* Exceptions for "setupProject" folder in "setupProject" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -54,6 +70,10 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6A0C43D02FE722A100C85DD3 /* Fonts */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6A0C43D32FE722A100C85DD3 /* Exceptions for "Fonts" folder in "setupProject" target */,
+				6A0C43D42FE722A100C85DD3 /* Exceptions for "Fonts" folder in "setupProjectUITests" target */,
+			);
 			path = Fonts;
 			sourceTree = "<group>";
 		};
