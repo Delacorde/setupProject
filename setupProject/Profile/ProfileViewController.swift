@@ -132,5 +132,7 @@ final class ProfileViewController: UIViewController {
         )
     }
     
-    @objc private func didTapButton() {}
+    @objc private func didTapButton() {
+        ProfileLogoutService.shared.logout()
+    }
 }
