@@ -1,10 +1,15 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+protocol ProfileViewControllerProtocol: AnyObject{
+    var presenter: ProfileViewControllerPresenterProtocol? {get set}
+    func updateAvatar(with url: URL)
+    func updateProfileDetails(name:String, login: String, bio: String)
+}
+
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
     // MARK: - Properties
-    private let profileService = ProfileService.shared
-    private var profileImageServiceObserver: NSObjectProtocol?
+    var presenter: ProfileViewControllerPresenterProtocol?
     
     private let avatarImageView = UIImageView()
     private let nameLabel = UILabel()
@@ -19,20 +24,34 @@ final class ProfileViewController: UIViewController {
         
         setupUI()
         
-        if let profile = profileService.profile {
-            updateProfile(profile: profile)
+        if presenter == nil {
+            let presenter = ProfileViewControllerPresenter()
+            presenter.view = self
+            self.presenter = presenter
         }
         
-        profileImageServiceObserver = NotificationCenter.default.addObserver(
-            forName: ProfileImageService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self = self else { return }
-            self.updateAvatar()
-        }
+        presenter?.viewDidLoad()
+    }
+    func updateProfileDetails(name: String, login: String, bio: String) {
+        nameLabel.text = name
+        nickNameLabel.text = login
+        bioLabel.text = bio
+    }
+    func updateAvatar(with url: URL) {
+        let placeholder = UIImage(systemName: "person.circle.fill")?
+            .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
         
-        updateAvatar()
+        avatarImageView.kf.indicatorType = .activity
+        avatarImageView.kf.setImage(
+            with: url,
+            placeholder: placeholder,
+            options: [
+                .processor(RoundCornerImageProcessor(cornerRadius: 35)),
+                .scaleFactor(UIScreen.main.scale),
+                .cacheOriginalImage
+            ]
+        )
     }
     
     // MARK: - Setup UI
@@ -101,38 +120,17 @@ final class ProfileViewController: UIViewController {
             quitButton.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
-    
-    // MARK: - Update Logic
-    func updateProfile(profile: Profile) {
-        nameLabel.text = profile.name
-        nickNameLabel.text = profile.loginName
-        bioLabel.text = profile.bio ?? ""
-    }
-    
-    private func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        
-        let placeholderImage = UIImage(systemName: "person.circle.fill")?
-            .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
-            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
-            
-        let processor = RoundCornerImageProcessor(cornerRadius: 35)
-        avatarImageView.kf.indicatorType = .activity
-        avatarImageView.kf.setImage(
-            with: url,
-            placeholder: placeholderImage,
-            options: [
-                .processor(processor),
-                .scaleFactor(UIScreen.main.scale),
-                .cacheOriginalImage
-            ]
-        )
-    }
-    
     @objc private func didTapButton() {
-        ProfileLogoutService.shared.logout()
+        let alert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert
+        )
+        let noAction = UIAlertAction(title: "Нет", style: .default)
+        let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            self?.presenter?.didTapLogout()                }
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        present(alert, animated: true)
     }
 }
