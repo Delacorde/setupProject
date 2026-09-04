@@ -8,34 +8,83 @@
 import XCTest
 
 final class setupProjectUITests: XCTestCase {
-
+    
+    private let app = XCUIApplication() // переменная приложения
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        continueAfterFailure = false // настройка выполнения тестов, которая прекратит выполнения тестов, если в тесте что-то пошло не так
+        
+        app.launch() // запускаем приложение перед каждым тестом
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func testAuth() throws {
+        // тестируем сценарий авторизации
+        app.buttons["Authenticate"].tap()
+        let webView = app.webViews["UnsplashWebView"]
+        
+        sleep(5)
+        
+        let loginTextField = webView.descendants(matching: .textField).element
+        
+        
+        loginTextField.tap()
+        loginTextField.typeText("enter ur gmail")
+        
+        webView.swipeUp()
+        
+        let passwordTextField = webView.descendants(matching: .secureTextField).element
+        XCTAssert(passwordTextField.waitForExistence(timeout: 3))
+        passwordTextField.tap()
+        passwordTextField.typeText("enter ur passw")
+        
+        webView.swipeUp()
+        webView.buttons["Login"].tap()
+        
+        let tablesQuery = app.tables
+        let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
+        
+        sleep(5)
+        
     }
-
-    @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    func testFeed() throws {
+        // тестируем сценарий ленты
+        let tablesQuery = app.tables
+        let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
+        cell.swipeUp()
+        
+        sleep(3)
+        
+        let cellToLike = tablesQuery.children(matching: .cell).element(boundBy: 1)
+        cellToLike.buttons["noLike"].tap()
+        sleep(1)
+        cellToLike.buttons["like"].tap()
+        
+        sleep(2)
+        
+        cellToLike.tap()
+        
+        sleep(2)
+        
+        let image = app.scrollViews.images.element(boundBy: 0)
+        image.pinch(withScale: 3, velocity: 1)
+        image.pinch(withScale: 0.5, velocity: -1)
+        
+        let backButton = app.buttons["backButton"]
+        backButton.tap()
     }
-
-    @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
-        }
+    func testProfile() throws {
+        // тестируем сценарий профиля
+        sleep(2)
+        app.tabBars.buttons.element(boundBy: 1).tap()
+        
+        XCTAssertTrue(app.staticTexts["name, lastName"].exists)
+            XCTAssertTrue(app.staticTexts["@username"].exists)
+            
+            app.buttons["quit"].tap()
+            
+            app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap()
+        
+        
     }
 }
